@@ -22,5 +22,5 @@ prepare-dev: bin vendor
 	$(CONSOLE) doctrine:fixtures:load -n --env=dev
 
 .PHONY: jwt-generate
-jwt-generate:
+jwt-generate: vendor
 	$(CONSOLE) lexik:jwt:generate-keypair --overwrite
