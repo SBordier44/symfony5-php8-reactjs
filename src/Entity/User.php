@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
+#[ApiResource]
+#[UniqueEntity(fields: ['email'], message: "Un utilisateur existe déjà avec cette adresse email")]
 class User implements UserInterface
 {
     /**
@@ -21,11 +29,15 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
     private int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[NotBlank(message: "L'adresse email est obligatoire")]
+    #[Email(message: "L'adresse email doit être valide", mode: Email::VALIDATION_MODE_STRICT)]
     private string $email;
 
     /**
@@ -36,16 +48,24 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string")
      */
+    #[NotBlank(message: "Le mot de passe est obligatoire")]
+    #[Length(min: 8, minMessage: "Le mot de passe doit faire minimum {{ limit }} caractères")]
     private string $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[NotBlank(message: "Le prénom de l'utilisateur est obligatoire")]
+    #[Length(min: 2, max: 50, minMessage: 'Le prénom doit faire au minimum {{ limit }} caractères', maxMessage: "Le prénom ne peux pas dépasser {{ limit }} caractères")]
     private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[NotBlank(message: "Le nom de famille de l'utilisateur est obligatoire")]
+    #[Length(min: 2, max: 50, minMessage: 'Le nom de famille doit faire au minimum {{ limit }} caractères', maxMessage: "Le nom de famille ne peux pas dépasser {{ limit }} caractères")]
     private string $lastName;
 
     /**
