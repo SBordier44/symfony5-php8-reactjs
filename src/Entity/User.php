@@ -20,7 +20,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-#[ApiResource]
+#[ApiResource(
+    denormalizationContext: ['groups' => ['users_write']],
+    normalizationContext: ['groups' => ['users_read']]
+)]
 #[UniqueEntity(fields: ['email'], message: "Un utilisateur existe déjà avec cette adresse email")]
 class User implements UserInterface
 {
@@ -29,13 +32,13 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'users_read'])]
     private int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'users_read', 'users_write'])]
     #[NotBlank(message: "L'adresse email est obligatoire")]
     #[Email(message: "L'adresse email doit être valide", mode: Email::VALIDATION_MODE_STRICT)]
     private string $email;
@@ -50,12 +53,13 @@ class User implements UserInterface
      */
     #[NotBlank(message: "Le mot de passe est obligatoire")]
     #[Length(min: 8, minMessage: "Le mot de passe doit faire minimum {{ limit }} caractères")]
+    #[Groups(['users_write'])]
     private string $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'users_read', 'users_write'])]
     #[NotBlank(message: "Le prénom de l'utilisateur est obligatoire")]
     #[Length(min: 2, max: 50, minMessage: 'Le prénom doit faire au minimum {{ limit }} caractères', maxMessage: "Le prénom ne peux pas dépasser {{ limit }} caractères")]
     private string $firstName;
@@ -63,7 +67,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'users_read', 'users_write'])]
     #[NotBlank(message: "Le nom de famille de l'utilisateur est obligatoire")]
     #[Length(min: 2, max: 50, minMessage: 'Le nom de famille doit faire au minimum {{ limit }} caractères', maxMessage: "Le nom de famille ne peux pas dépasser {{ limit }} caractères")]
     private string $lastName;
@@ -71,6 +75,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner")
      */
+    #[Groups(['users_read'])]
     private ArrayCollection|Collection|array $customers;
 
     #[Pure]

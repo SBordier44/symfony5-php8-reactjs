@@ -32,6 +32,8 @@ class AppFixtures extends Fixture
             ->setRoles(['ROLE_ADMIN'])
             ->setPassword($this->passwordEncoder->encodePassword($adminUser, 'password'));
 
+        $manager->persist($adminUser);
+
         for ($u = 0; $u < 10; $u++) {
             $chrono = 1;
             $user = new User();

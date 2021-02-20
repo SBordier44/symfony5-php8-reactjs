@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 
 namespace App\Entity;
 
@@ -55,7 +55,7 @@ class Invoice
      */
     #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'invoices_write'])]
     #[Type(type: DateTimeInterface::class)]
-    private DateTimeInterface $sentAt;
+    private ?DateTimeInterface $sentAt = null;
 
     /**
      * @ORM\Column(type="string", length=255)

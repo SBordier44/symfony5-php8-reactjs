@@ -18,7 +18,7 @@ prepare-dev: bin vendor
 	$(CONSOLE) cache:clear --env=dev
 	$(CONSOLE) doctrine:database:drop --if-exists -f --env=dev
 	$(CONSOLE) doctrine:database:create --env=dev
-	$(CONSOLE) doctrine:schema:update -f --env=dev
+	$(CONSOLE) doctrine:migration:migrate -n --env=dev
 	$(CONSOLE) doctrine:fixtures:load -n --env=dev
 
 .PHONY: jwt-generate

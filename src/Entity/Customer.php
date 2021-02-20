@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -94,7 +95,7 @@ class Customer
     #[Groups(['customers_read'])]
     #[ApiSubresource]
     #[NotBlank(message: "L'utilisateur propriétaire du client est obligatoire")]
-    private User $owner;
+    private UserInterface $owner;
 
     #[Pure]
     public function __construct()
@@ -179,12 +180,12 @@ class Customer
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getOwner(): ?UserInterface
     {
         return $this->owner;
     }
 
-    public function setOwner(User $owner): self
+    public function setOwner(UserInterface $owner): self
     {
         $this->owner = $owner;
 
