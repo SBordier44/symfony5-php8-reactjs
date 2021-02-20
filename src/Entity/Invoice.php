@@ -14,7 +14,6 @@ use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -25,7 +24,7 @@ use Symfony\Component\Validator\Constraints\Type;
     itemOperations: [Request::METHOD_GET, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE],
     subresourceOperations: ['api_customers_invoices_get_subresource' => ['normalization_context' => ['groups' => ['invoices_read']]]],
     attributes: ['pagination_enabled' => true, 'pagination_items_per_page' => 20, 'order' => ['sentAt' => 'desc']],
-    denormalizationContext: ['disable_type_enforcement' => true],
+    denormalizationContext: ['disable_type_enforcement' => true, 'groups' => ['invoices_write']],
     normalizationContext: ['groups' => ['invoices_read']]
 )]
 #[ApiFilter(OrderFilter::class, properties: ['amount' => 'desc'])]
@@ -46,7 +45,7 @@ class Invoice
     /**
      * @ORM\Column(type="float")
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'invoices_write'])]
     #[NotBlank(message: "Le montant de la facture est obligatoire")]
     #[Type(type: 'numeric', message: "Le format du montant doit être de type numérique")]
     private float $amount;
@@ -54,15 +53,14 @@ class Invoice
     /**
      * @ORM\Column(type="datetime")
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
-    #[NotBlank(message: "La date d'envoi de la facture est obligatoire")]
-    #[DateTime(message: "La date doit être au format YYYY-MM-DD / AAAA-MM-JJ")]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'invoices_write'])]
+    #[Type(type: DateTimeInterface::class)]
     private DateTimeInterface $sentAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'invoices_write'])]
     #[NotBlank(message: "Le statut de la facture est obligatoire")]
     #[Choice(choices: [
         self::STATUS_SENT,
@@ -74,7 +72,7 @@ class Invoice
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource'])]
+    #[Groups(['invoices_read', 'customers_read', 'invoices_subresource', 'invoices_write'])]
     #[NotBlank(message: "Le numéro de la facture est obligatoire")]
     #[Type(type: 'integer', message: "Le numéro de la facture doit être un nombre entier")]
     private int $chrono;
@@ -83,7 +81,7 @@ class Invoice
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['invoices_read'])]
+    #[Groups(['invoices_read', 'invoices_write'])]
     #[NotBlank(message: "Le client de la facture est obligatoire")]
     private Customer $customer;
 
