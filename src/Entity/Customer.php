@@ -191,4 +191,29 @@ class Customer
 
         return $this;
     }
+
+    #[Groups(['customers_read'])]
+    public function getTotalAmount(): float
+    {
+        return array_reduce(
+            $this->invoices->toArray(),
+            function ($total, $invoice) {
+                return $total + $invoice->getAmount();
+            },
+            0
+        );
+    }
+
+    #[Groups(['customers_read'])]
+    public function getUnpaidAmount(): float
+    {
+        return array_reduce(
+            $this->invoices->toArray(),
+            function ($total, $invoice) {
+                return $total + ($invoice->getStatus() === 'PAID'
+                    || $invoice->getStatus() === 'CANCELED' ? 0 : $invoice->getAmount());
+            },
+            0
+        );
+    }
 }

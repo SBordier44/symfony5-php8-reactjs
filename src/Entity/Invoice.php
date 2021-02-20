@@ -12,6 +12,7 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -23,7 +24,7 @@ use Symfony\Component\Validator\Constraints\Type;
 #[ApiResource(
     itemOperations: [Request::METHOD_GET, Request::METHOD_PUT, Request::METHOD_PATCH, Request::METHOD_DELETE],
     subresourceOperations: ['api_customers_invoices_get_subresource' => ['normalization_context' => ['groups' => ['invoices_read']]]],
-    attributes: ['pagination_enabled' => true, 'pagination_items_per_page' => 20, 'order' => ['sentAt' => 'desc']],
+    attributes: ['pagination_enabled' => false, 'pagination_items_per_page' => 20, 'order' => ['sentAt' => 'desc']],
     denormalizationContext: ['disable_type_enforcement' => true, 'groups' => ['invoices_write']],
     normalizationContext: ['groups' => ['invoices_read']]
 )]
@@ -152,7 +153,7 @@ class Invoice
 
     #[Pure]
     #[Groups(['invoices_read', 'invoices_subresource'])]
-    public function getUser(): User
+    public function getUser(): UserInterface
     {
         return $this->customer->getOwner();
     }

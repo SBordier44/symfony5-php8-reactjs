@@ -1,0 +1,35 @@
+{
+  "devDependencies": {
+    "@babel/preset-react": "^7.12",
+    "@fortawesome/fontawesome-svg-core": "^1.2",
+    "@fortawesome/free-brands-svg-icons": "^5.15",
+    "@fortawesome/free-regular-svg-icons": "^5.15",
+    "@fortawesome/free-solid-svg-icons": "^5.15",
+    "@fortawesome/react-fontawesome": "^0.1",
+    "@symfony/webpack-encore": "^1.1",
+    "axios": "^0.21",
+    "bootstrap": "^4.6",
+    "bootswatch": "^4.6",
+    "core-js": "^3.8",
+    "install": "^0.13",
+    "jwt-decode": "^3.1",
+    "moment": "^2.29",
+    "react": "^17.0",
+    "react-content-loader": "^6.0",
+    "react-dom": "^17.0",
+    "react-router-dom": "^5.2",
+    "react-toastify": "^7.0",
+    "regenerator-runtime": "^0.13",
+    "sass": "^1.32",
+    "sass-loader": "^11.0",
+    "webpack-notifier": "^1.13"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "dev-server": "encore dev-server --hot",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
+  }
+}
