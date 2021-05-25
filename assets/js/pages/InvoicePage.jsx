@@ -6,7 +6,7 @@ import Select from "../components/forms/Select";
 import customersAPI from "../services/customersAPI";
 import {toast} from "react-toastify";
 import FormContentLoader from "../components/loaders/FormContentLoader";
-import {faSave, faSignInAlt} from "@fortawesome/free-solid-svg-icons";
+import {faSave} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const InvoicePage = ({history, match}) => {
@@ -16,8 +16,7 @@ const InvoicePage = ({history, match}) => {
     const emptyInvoiceModel = {
         amount: '',
         customer: '',
-        status: '',
-        chrono: ''
+        status: ''
     }
 
     const [invoice, setInvoice] = useState({...emptyInvoiceModel, status: 'SENT'})

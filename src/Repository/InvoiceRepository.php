@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Customer;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Invoice|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,14 +23,14 @@ class InvoiceRepository extends ServiceEntityRepository
         parent::__construct($registry, Invoice::class);
     }
 
-    public function findNextChrono(UserInterface $user): int
+    public function findNextChrono(Customer $customer): int
     {
         try {
             $nextChrono = $this->createQueryBuilder('i')
                     ->select('i.chrono')
                     ->join('i.customer', 'c')
-                    ->where('c.user = :user')
-                    ->setParameter('user', $user)
+                    ->where('i.customer = :customer')
+                    ->setParameter('customer', $customer)
                     ->orderBy('i.chrono', 'desc')
                     ->setMaxResults(1)
                     ->getQuery()
